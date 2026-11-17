@@ -1,0 +1,40 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#050409"><title>我的小宇宙 · 在星河里慢慢探索</title><link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2032%2032%22%3E%3Cpath%20fill=%22%23e7cca4%22%20d=%22M16%202L20%2012L30%2016L20%2020L16%2030L12%2020L2%2016L12%2012Z%22/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="details.css"><link rel="stylesheet" href="products.css"><script defer src="vendor/three.min.js"></script><script defer src="content-data.js"></script><script defer src="products.js"></script><link rel="stylesheet" href="continuous.css"><link rel="stylesheet" href="personal.css"><script defer src="content-ui.js"></script><script defer src="universe-scene.js"></script></head>
+<body class="product-galaxy continuous personal" data-level="universe">
+<main id="universe" aria-label="连续星河宇宙，点击类别靠近，点击项目星光阅读"></main><div class="vignette" aria-hidden="true"></div>
+<header class="interface"><a class="wordmark" href="#" aria-label="返回宇宙"><span class="mark">✧</span> 我的小宇宙</a><nav class="personal-nav" aria-label="个人空间"><button id="nav-about">关于我</button><button id="nav-work">作品</button></nav><div class="breadcrumb"><a href="#">宇宙</a><span id="crumb-region" hidden></span></div></header>
+<section class="overview-intro interface"><h1>在我的宇宙里，慢慢探索。</h1><p>每一点星光，都藏着一段创作。</p></section>
+<section class="region-intro interface" hidden><button id="back-universe">← 返回宇宙</button><div id="region-eyebrow" class="eyebrow"></div><h1 id="region-title"></h1><p id="region-copy"></p><small id="region-count"></small><button id="start-explore">探索第一件作品 ↗</button><button id="restore-region">找回项目星光 ↗</button></section>
+<div id="region-targets" aria-label="星系类别"></div>
+<div id="empty-region" hidden><p>这片星光，留给下一段创作。</p><small>慢慢来，这里暂时留白。</small></div>
+<nav class="category-nav interface" aria-label="选择星系"><button data-region="0">产品 / 工具设计</button><button data-region="1">影像 / 叙事</button><button data-region="2">研究 / 实验</button></nav>
+<button id="project-list-toggle" class="interface" aria-expanded="false" aria-controls="project-directory" hidden>项目目录 ↗</button>
+<aside id="project-directory" hidden class="project-index interface" aria-label="星系项目目录"></aside>
+<div id="star-targets" aria-label="项目星球"></div><div id="star-tooltip" hidden><span id="star-name"></span><small>点击星球，阅读项目</small></div>
+<section id="star-card" hidden role="region" aria-labelledby="card-title">
+ <div class="card-top"><span id="project-counter">PROJECT 01 / 03</span><button id="leave-star" aria-label="关闭项目，返回星系">返回星系 <span>×</span></button></div>
+ <div class="card-scroll" tabindex="0" aria-label="项目详情，可滚动阅读">
+  <div class="project-tag"><span id="project-kind"></span><span>示例内容</span></div><h2 id="card-title"></h2><p id="project-summary"></p>
+  <div id="project-cover" class="cover" role="img"></div><div class="cover-caption">界面草图 · 用于展示内容结构</div>
+  <div class="project-facts"><div><small>项目方向</small><span id="fact-direction"></span></div><div><small>设计关注</small><span id="fact-focus"></span></div></div>
+  <div class="detail-tabs" role="tablist" aria-label="项目内容"><button id="tab-overview" role="tab" aria-selected="true" aria-controls="overview-panel">项目概览</button><button id="tab-process" role="tab" aria-selected="false" aria-controls="process-panel" tabindex="-1">设计思路</button></div>
+  <div id="overview-panel" role="tabpanel" aria-labelledby="tab-overview"><h3>从一个问题开始</h3><p id="project-problem"></p><h3>希望带来的体验</h3><p id="project-experience"></p><div class="takeaway"><span>核心想法</span><p id="project-principle"></p></div></div>
+  <div id="process-panel" role="tabpanel" aria-labelledby="tab-process" hidden><h3>三个关键设计决定</h3><ol id="project-process"></ol></div>
+  <p class="content-note">以上名称、界面与文案均为演示占位，后续替换为你的真实作品。</p>
+  <a id="project-link" class="project-link" href="#" target="_blank" rel="noopener noreferrer" hidden>打开项目 ↗</a><div class="project-footer"><button id="previous-project">← 上一个</button><button id="next-project">下一个 →</button></div>
+ </div>
+</section>
+<div class="hint interface">拖动探索 <span>·</span> 点击类别，靠近星系</div>
+<button id="universe-heart" class="interface" aria-label="我的小宇宙，了解这个项目"><span class="heart-spark" aria-hidden="true"></span><strong>我的小宇宙</strong><small>关于我</small></button>
+<section id="about-universe" hidden role="region" aria-labelledby="about-title">
+ <button id="close-about" aria-label="关闭介绍，返回宇宙">← 返回星河</button>
+ <div class="eyebrow">ABOUT ME</div><h2 id="about-title">LeoLei</h2>
+ <p class="about-lead"></p><div id="about-copy"></div>
+ <button id="about-explore">去看看我的作品 ↗</button>
+ <small class="about-note" hidden></small>
+</section>
+
+<nav class="controls" aria-label="星河控制"><button id="appearance" aria-expanded="false" aria-controls="settings">调节氛围</button><button id="pause" aria-pressed="false">暂停流动</button><button id="reset">星云总览</button><button id="immersive" aria-pressed="false">只看星河 <kbd>H</kbd></button></nav>
+<aside id="settings" hidden><div class="panel-title">星河氛围<button id="close-settings" aria-label="关闭氛围设置">×</button></div><label for="mist">柔雾 <input id="mist" type="range" min="0" max="180" value="90"></label><label for="brightness">星光 <input id="brightness" type="range" min="35" max="150" value="90"></label><label for="warmth">暖意 <input id="warmth" type="range" min="0" max="100" value="55"></label><p>H 收起文字 · 空格暂停流动</p></aside>
+<div id="loading" role="status">正在点亮宇宙<span>✧</span></div><div id="error" hidden role="alert">当前浏览器暂时无法显示星河。请使用支持 WebGL 的浏览器，并开启图形加速。</div>
+<div class="example-note interface">示例内容 · 探索原型</div><div id="navigation-status" class="sr-only" role="status" aria-live="polite"></div></body></html>
+

@@ -1,0 +1,8 @@
+/* 同一清洁桌面系统；猫依旧完整等比绘制，只有球有位移。 */
+.board[data-ball-layout="toy"] .time-ball{z-index:5}
+.board[data-ball-phase="contact"] .time-ball,.board[data-ball-phase="reaching"] .time-ball,.board[data-ball-phase="playing"] .time-ball,.board[data-ball-phase="rolling"] .time-ball,.board[data-ball-phase="flight"] .time-ball{z-index:2}
+.board[data-ball-phase="watching"] .toy-shadow,.board[data-ball-phase="resting"] .toy-shadow,.board[data-ball-phase="paused"] .toy-shadow{opacity:1}
+.pet-target:disabled,.pet-touch-hint:disabled{opacity:1;cursor:default}
+.board.meditation .pet-touch-hint{visibility:hidden}
+/* 返回准备态时立即复位按钮，避免球先回到大球态而按钮仍经过旧位置。 */
+.board[data-ball-layout="home"] .time-readout,.board[data-ball-layout="home"] .timer-options,.board[data-ball-layout="home"] .action-row,.board[data-ball-layout="home"] .rhythm{transition:none}

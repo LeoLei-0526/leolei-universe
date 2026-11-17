@@ -1,0 +1,512 @@
+{
+  "approved": true,
+  "version": 2,
+  "images": {
+    "image0": "./assets/cat/idle/00.png",
+    "image1": "./assets/cat/sleep/00.png",
+    "image2": "./assets/cat/meditating/00.png",
+    "image3": "./assets/cat/meditating/01.png",
+    "image4": "./assets/cat/meditating/02.png",
+    "image5": "./assets/cat/meditating/03.png",
+    "image6": "./assets/cat/playing/00.png",
+    "image7": "./assets/cat/playing/01.png",
+    "image8": "./assets/cat/playing/02.png",
+    "image9": "./assets/cat/playing/03.png",
+    "image10": "./assets/cat/playing/04.png",
+    "image11": "./assets/cat/playing/05.png",
+    "image12": "./assets/cat/playing/06.png",
+    "image13": "./assets/cat/playing/07.png"
+  },
+  "actions": {
+    "idle": {
+      "canvas": [
+        448,
+        544
+      ],
+      "baseline": [
+        224,
+        528
+      ],
+      "staticFrame": 0,
+      "loop": true,
+      "frames": [
+        {
+          "image": "image0",
+          "rect": [
+            0,
+            0,
+            448,
+            544
+          ],
+          "durationMs": 5280
+        },
+        {
+          "image": "image0",
+          "rect": [
+            448,
+            0,
+            448,
+            544
+          ],
+          "durationMs": 140
+        },
+        {
+          "image": "image0",
+          "rect": [
+            896,
+            0,
+            448,
+            544
+          ],
+          "durationMs": 90
+        },
+        {
+          "image": "image0",
+          "rect": [
+            1344,
+            0,
+            448,
+            544
+          ],
+          "durationMs": 100
+        },
+        {
+          "image": "image0",
+          "rect": [
+            1792,
+            0,
+            448,
+            544
+          ],
+          "durationMs": 140
+        },
+        {
+          "image": "image0",
+          "rect": [
+            2240,
+            0,
+            448,
+            544
+          ],
+          "durationMs": 250
+        }
+      ]
+    },
+    "waving": {
+      "canvas": [
+        448,
+        544
+      ],
+      "baseline": [
+        224,
+        528
+      ],
+      "staticFrame": 0,
+      "loop": false,
+      "frames": [
+        {
+          "image": "image0",
+          "rect": [
+            0,
+            544,
+            448,
+            544
+          ],
+          "durationMs": 160
+        },
+        {
+          "image": "image0",
+          "rect": [
+            448,
+            544,
+            448,
+            544
+          ],
+          "durationMs": 220
+        },
+        {
+          "image": "image0",
+          "rect": [
+            896,
+            544,
+            448,
+            544
+          ],
+          "durationMs": 220
+        },
+        {
+          "image": "image0",
+          "rect": [
+            1344,
+            544,
+            448,
+            544
+          ],
+          "durationMs": 300
+        }
+      ]
+    },
+    "sleep": {
+      "canvas": [
+        400,
+        272
+      ],
+      "baseline": [
+        200,
+        248
+      ],
+      "staticFrame": 0,
+      "loop": true,
+      "frames": [
+        {
+          "image": "image1",
+          "rect": [
+            0,
+            0,
+            400,
+            272
+          ],
+          "durationMs": 800
+        },
+        {
+          "image": "image1",
+          "rect": [
+            400,
+            0,
+            400,
+            272
+          ],
+          "durationMs": 800
+        },
+        {
+          "image": "image1",
+          "rect": [
+            800,
+            0,
+            400,
+            272
+          ],
+          "durationMs": 800
+        },
+        {
+          "image": "image1",
+          "rect": [
+            1200,
+            0,
+            400,
+            272
+          ],
+          "durationMs": 800
+        },
+        {
+          "image": "image1",
+          "rect": [
+            1600,
+            0,
+            400,
+            272
+          ],
+          "durationMs": 800
+        },
+        {
+          "image": "image1",
+          "rect": [
+            2000,
+            0,
+            400,
+            272
+          ],
+          "durationMs": 800
+        }
+      ]
+    },
+    "meditating": {
+      "canvas": [
+        544,
+        688
+      ],
+      "baseline": [
+        304,
+        656
+      ],
+      "staticFrame": 0,
+      "loop": true,
+      "frames": [
+        {
+          "image": "image2",
+          "rect": [
+            0,
+            0,
+            544,
+            688
+          ],
+          "durationMs": 1800
+        },
+        {
+          "image": "image3",
+          "rect": [
+            0,
+            0,
+            544,
+            688
+          ],
+          "durationMs": 1400
+        },
+        {
+          "image": "image4",
+          "rect": [
+            0,
+            0,
+            544,
+            688
+          ],
+          "durationMs": 1800
+        },
+        {
+          "image": "image5",
+          "rect": [
+            0,
+            0,
+            544,
+            688
+          ],
+          "durationMs": 1600
+        }
+      ]
+    },
+    "playing": {
+      "canvas": [
+        608,
+        560
+      ],
+      "baseline": [
+        320,
+        528
+      ],
+      "staticFrame": 0,
+      "loop": false,
+      "frames": [
+        {
+          "image": "image6",
+          "rect": [
+            0,
+            0,
+            608,
+            560
+          ],
+          "durationMs": 850
+        },
+        {
+          "image": "image7",
+          "rect": [
+            0,
+            0,
+            608,
+            560
+          ],
+          "durationMs": 190
+        },
+        {
+          "image": "image8",
+          "rect": [
+            0,
+            0,
+            608,
+            560
+          ],
+          "durationMs": 180
+        },
+        {
+          "image": "image9",
+          "rect": [
+            0,
+            0,
+            608,
+            560
+          ],
+          "durationMs": 220
+        },
+        {
+          "image": "image10",
+          "rect": [
+            0,
+            0,
+            608,
+            560
+          ],
+          "durationMs": 240
+        },
+        {
+          "image": "image11",
+          "rect": [
+            0,
+            0,
+            608,
+            560
+          ],
+          "durationMs": 190
+        },
+        {
+          "image": "image12",
+          "rect": [
+            0,
+            0,
+            608,
+            560
+          ],
+          "durationMs": 240
+        },
+        {
+          "image": "image13",
+          "rect": [
+            0,
+            0,
+            608,
+            560
+          ],
+          "durationMs": 1050
+        }
+      ]
+    }
+  },
+  "choreography": {
+    "version": 1,
+    "ready": true,
+    "status": "真实v4帧与07接触映射已接入，等待本稿实际核验和总控复审",
+    "sourceContactMap": "新动作素材/contact-map.json",
+    "gestures": [
+      {
+        "id": "push",
+        "label": "低位前推",
+        "action": "playing",
+        "watchFrame": 0,
+        "steps": [
+          {
+            "frame": 0,
+            "durationMs": 650,
+            "phase": "watching",
+            "ball": [
+              646,
+              497
+            ]
+          },
+          {
+            "frame": 1,
+            "durationMs": 200,
+            "phase": "reaching",
+            "ball": [
+              599,
+              497
+            ]
+          },
+          {
+            "frame": 2,
+            "durationMs": 280,
+            "contact": true,
+            "paw": [
+              547,
+              494
+            ],
+            "offset": [
+              18,
+              0
+            ]
+          },
+          {
+            "frame": 3,
+            "durationMs": 280,
+            "phase": "rolling",
+            "ball": [
+              646,
+              497
+            ]
+          },
+          {
+            "frame": 2,
+            "durationMs": 140,
+            "phase": "playing",
+            "ball": [
+              646,
+              497
+            ]
+          },
+          {
+            "frame": 1,
+            "durationMs": 160,
+            "phase": "playing",
+            "ball": [
+              646,
+              497
+            ]
+          },
+          {
+            "frame": 0,
+            "durationMs": 260,
+            "phase": "watching",
+            "ball": [
+              646,
+              497
+            ]
+          }
+        ]
+      },
+      {
+        "id": "catch",
+        "label": "弯腕收接",
+        "action": "playing",
+        "watchFrame": 7,
+        "steps": [
+          {
+            "frame": 7,
+            "durationMs": 500,
+            "phase": "watching",
+            "ball": [
+              646,
+              497
+            ]
+          },
+          {
+            "frame": 4,
+            "durationMs": 260,
+            "phase": "reaching",
+            "ball": [
+              612,
+              470
+            ]
+          },
+          {
+            "frame": 5,
+            "durationMs": 300,
+            "contact": true,
+            "paw": [
+              520,
+              448
+            ],
+            "offset": [
+              18,
+              0
+            ]
+          },
+          {
+            "frame": 6,
+            "durationMs": 320,
+            "phase": "rolling",
+            "ball": [
+              611,
+              480
+            ]
+          },
+          {
+            "frame": 7,
+            "durationMs": 400,
+            "phase": "rolling",
+            "ball": [
+              646,
+              497
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

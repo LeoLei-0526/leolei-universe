@@ -1,0 +1,337 @@
+{
+  "schemaVersion": 1,
+  "audio": [
+    {
+      "id": "wind-nolde",
+      "name": "林间风 · 诺尔德森林",
+      "kind": "recording",
+      "category": "wind",
+      "approved": true,
+      "sourceURL": "https://freesound.org/people/movingplaid/sounds/165288/",
+      "author": "movingplaid",
+      "license": {
+        "name": "CC0-1.0",
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "embeddable": true,
+        "attribution": "Nolde Forest - Wind Through Trees.wav — movingplaid / Freesound (https://freesound.org/people/movingplaid/sounds/165288/); CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/). 本包采用公开 HQ MP3 预览，保存下载字节。",
+        "attributionRequired": false
+      },
+      "productEmbedded": true,
+      "sha256": "6434b31b2df9073e2f4ff9a406d5cb4061972685298e669a3339c6dd66522070",
+      "durationSeconds": 84.56920634920635,
+      "playback": {
+        "loop": true,
+        "gain": 0.6,
+        "fadeOutSeconds": 2,
+        "loopNote": "真实录音的2秒尾首交叉淡化版本，保留原件及处理说明；波形/解码已检查，主观衔接听感尚未试听。"
+      },
+      "suggestedModes": [
+        "focus",
+        "meditation",
+        "sleep"
+      ],
+      "usageNote": "树叶和风势自然变化；有无锐鸟叫、阵风尚未人工听验",
+      "recordingScene": "美国宾夕法尼亚 Nolde Forest，Spruce Trail 阔叶树间；Tascam PR-10 实录",
+      "downloadedVersion": "freesound_public_hq_preview",
+      "sourceEvidence": "授权证据/wind-nolde_来源原页.html",
+      "sourceCatalogSHA256": "5357f5373ded180ec6b81a90a0b57d53bdce82b24045dada0b1f9cbecb238a4a",
+      "audition": {
+        "decodePassed": true,
+        "subjectivelyListened": false
+      },
+      "adoptionNote": "未做主观试听；循环衍生版本到位后更新实际哈希并经总控采用。",
+      "file": "./assets/audio/files/wind-nolde-6434b31b2df9.wav"
+    },
+    {
+      "id": "rain-garden",
+      "name": "花园细雨",
+      "kind": "recording",
+      "category": "rain",
+      "approved": true,
+      "sourceURL": "https://freesound.org/people/barkenov/sounds/640655/",
+      "author": "barkenov",
+      "license": {
+        "name": "CC0-1.0",
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "embeddable": true,
+        "attribution": "Soft rain.WAV — barkenov / Freesound (https://freesound.org/people/barkenov/sounds/640655/); CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/). 本包采用公开 HQ MP3 预览，保存下载字节。",
+        "attributionRequired": false
+      },
+      "productEmbedded": true,
+      "sha256": "5ef83dd256b4837da67e35af7e76593a708767b1e87799893dc637350a95a50b",
+      "durationSeconds": 59.096666666666664,
+      "playback": {
+        "loop": true,
+        "gain": 1,
+        "fadeOutSeconds": 2,
+        "loopNote": "真实录音的2秒尾首交叉淡化版本，保留原件及处理说明；波形/解码已检查，主观衔接听感尚未试听。"
+      },
+      "suggestedModes": [
+        "focus",
+        "sleep",
+        "meditation"
+      ],
+      "usageNote": "作者称细雨，未标雷声；不能据此保证全段没有雷声或水滴突变",
+      "recordingScene": "作者家中花园的细雨实录",
+      "downloadedVersion": "freesound_public_hq_preview",
+      "sourceEvidence": "授权证据/rain-garden_来源原页.html",
+      "sourceCatalogSHA256": "5357f5373ded180ec6b81a90a0b57d53bdce82b24045dada0b1f9cbecb238a4a",
+      "audition": {
+        "decodePassed": true,
+        "subjectivelyListened": false
+      },
+      "adoptionNote": "原件RMS约0.000854，拟采用素材方适度增益且不削波的新衍生版本；到位后更新文件/时长/哈希并再请总控采用。",
+      "file": "./assets/audio/files/rain-garden-5ef83dd256b4.wav"
+    },
+    {
+      "id": "grassland-prairie",
+      "name": "夏日草原 · 加拿大",
+      "kind": "recording",
+      "category": "grassland",
+      "approved": true,
+      "sourceURL": "https://freesound.org/people/dsebeste/sounds/351609/",
+      "author": "dsebeste",
+      "license": {
+        "name": "CC0-1.0",
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "embeddable": true,
+        "attribution": "PrairieSummer_ambience.wav — dsebeste / Freesound (https://freesound.org/people/dsebeste/sounds/351609/); CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/). 本包采用公开 HQ MP3 预览，保存下载字节。",
+        "attributionRequired": false
+      },
+      "productEmbedded": true,
+      "sha256": "ce761f191a9a37fbe148fdece73326d900a07ed92e8c17e27fa0b42e6e38bba4",
+      "durationSeconds": 56.31666666666667,
+      "playback": {
+        "loop": true,
+        "gain": 0.8,
+        "fadeOutSeconds": 2,
+        "loopNote": "真实录音的2秒尾首交叉淡化版本，保留原件及处理说明；波形/解码已检查，主观衔接听感尚未试听。"
+      },
+      "suggestedModes": [
+        "meditation",
+        "focus"
+      ],
+      "usageNote": "包含鸟叫和昆虫，锐鸟叫/音量突变待听验；睡眠不作为首选",
+      "recordingScene": "加拿大 Saskatchewan，South Saskatchewan River 河岸附近草原；Zoom H4N，含草叶、鸟、虫及树间微风",
+      "downloadedVersion": "freesound_public_hq_preview",
+      "sourceEvidence": "授权证据/grassland-prairie_来源原页.html",
+      "sourceCatalogSHA256": "5357f5373ded180ec6b81a90a0b57d53bdce82b24045dada0b1f9cbecb238a4a",
+      "audition": {
+        "decodePassed": true,
+        "subjectivelyListened": false
+      },
+      "adoptionNote": "未做主观试听；循环衍生版本到位后更新实际哈希并经总控采用。",
+      "file": "./assets/audio/files/grassland-prairie-ce761f191a9a.wav"
+    },
+    {
+      "id": "waves-atlantic",
+      "name": "海浪轻拍 · 大西洋",
+      "kind": "recording",
+      "category": "ocean",
+      "approved": true,
+      "sourceURL": "https://freesound.org/people/davidgtr1/sounds/581488/",
+      "author": "davidgtr1",
+      "license": {
+        "name": "CC0-1.0",
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "embeddable": true,
+        "attribution": "Ocean Waves Lapping Waves Sound.wav — davidgtr1 / Freesound (https://freesound.org/people/davidgtr1/sounds/581488/); CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/). 本包采用公开 HQ MP3 预览，保存下载字节。",
+        "attributionRequired": false
+      },
+      "productEmbedded": true,
+      "sha256": "dd1f454195ba5409855aea793a5611549d3d785f0fd42d072f955a10eb8ceae7",
+      "durationSeconds": 68.5,
+      "playback": {
+        "loop": true,
+        "gain": 0.5333333333333333,
+        "fadeOutSeconds": 2,
+        "loopNote": "真实录音的2秒尾首交叉淡化版本，保留原件及处理说明；波形/解码已检查，主观衔接听感尚未试听。"
+      },
+      "suggestedModes": [
+        "sleep",
+        "meditation",
+        "focus"
+      ],
+      "usageNote": "海浪进退有周期起伏与近处水花；不能承诺无浪头突变",
+      "recordingScene": "作者脚边大西洋海浪进退；Zoom H1 实录",
+      "downloadedVersion": "freesound_public_hq_preview",
+      "sourceEvidence": "授权证据/waves-atlantic_来源原页.html",
+      "sourceCatalogSHA256": "5357f5373ded180ec6b81a90a0b57d53bdce82b24045dada0b1f9cbecb238a4a",
+      "audition": {
+        "decodePassed": true,
+        "subjectivelyListened": false
+      },
+      "adoptionNote": "未做主观试听；循环衍生版本到位后更新实际哈希并经总控采用。",
+      "file": "./assets/audio/files/waves-atlantic-dd1f454195ba.wav"
+    },
+    {
+      "id": "music-cylinder-1",
+      "name": "Cylinder One · 氛围器乐",
+      "kind": "music",
+      "category": "meditation",
+      "approved": true,
+      "sourceURL": "https://chriszabriskie.com/cylinders/",
+      "author": "Chris Zabriskie",
+      "license": {
+        "name": "CC-BY-4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/",
+        "embeddable": true,
+        "attribution": "\"Cylinder One\" by Chris Zabriskie. From the album Cylinders (2014). Licensed under Creative Commons Attribution 4.0 (https://creativecommons.org/licenses/by/4.0/). Source: https://chriszabriskie.com/cylinders/. 本包未修改作者音频。",
+        "attributionRequired": true
+      },
+      "productEmbedded": true,
+      "sha256": "dc88756d6c5453ca0293f340c59c62b41ed0478f2c4b7d3d12f1df9428675b74",
+      "durationSeconds": 176.10666666666665,
+      "playback": {
+        "loop": false,
+        "gain": 0.4,
+        "fadeOutSeconds": 2,
+        "loopNote": "保留原作者音乐文件，完整播放不循环；网页音量较低，随本页期限渐弱停止。"
+      },
+      "usageNote": "氛围器乐/轻钢琴候选，完整解码已验，主观听感尚未试听。",
+      "file": "./assets/audio/files/music-cylinder-1-dc88756d6c54.m4a"
+    },
+    {
+      "id": "music-cylinder-6",
+      "name": "Cylinder Six · 氛围器乐",
+      "kind": "music",
+      "category": "meditation",
+      "approved": true,
+      "sourceURL": "https://chriszabriskie.com/cylinders/",
+      "author": "Chris Zabriskie",
+      "license": {
+        "name": "CC-BY-4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/",
+        "embeddable": true,
+        "attribution": "\"Cylinder Six\" by Chris Zabriskie. From the album Cylinders (2014). Licensed under Creative Commons Attribution 4.0 (https://creativecommons.org/licenses/by/4.0/). Source: https://chriszabriskie.com/cylinders/. 本包未修改作者音频。",
+        "attributionRequired": true
+      },
+      "productEmbedded": true,
+      "sha256": "a678ff359b86ff2a35e31e4c0aa1168941e0d8d4cf43142eb6c9a28bc6c87a82",
+      "durationSeconds": 105.64,
+      "playback": {
+        "loop": false,
+        "gain": 0.35,
+        "fadeOutSeconds": 2,
+        "loopNote": "保留原作者音乐文件，完整播放不循环；网页音量较低，随本页期限渐弱停止。"
+      },
+      "usageNote": "氛围器乐/轻钢琴候选，完整解码已验，主观听感尚未试听。",
+      "file": "./assets/audio/files/music-cylinder-6-a678ff359b86.m4a"
+    },
+    {
+      "id": "music-cylinder-7",
+      "name": "Cylinder Seven · 氛围器乐",
+      "kind": "music",
+      "category": "meditation",
+      "approved": true,
+      "sourceURL": "https://chriszabriskie.com/cylinders/",
+      "author": "Chris Zabriskie",
+      "license": {
+        "name": "CC-BY-4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/",
+        "embeddable": true,
+        "attribution": "\"Cylinder Seven\" by Chris Zabriskie. From the album Cylinders (2014). Licensed under Creative Commons Attribution 4.0 (https://creativecommons.org/licenses/by/4.0/). Source: https://chriszabriskie.com/cylinders/. 本包未修改作者音频。",
+        "attributionRequired": true
+      },
+      "productEmbedded": true,
+      "sha256": "edbf9b890bfaa960adff4ad5acfacff05cec5cff863e6f08808226476a673d07",
+      "durationSeconds": 532.1733333333333,
+      "playback": {
+        "loop": false,
+        "gain": 0.22,
+        "fadeOutSeconds": 2,
+        "loopNote": "保留原作者音乐文件，完整播放不循环；网页音量较低，随本页期限渐弱停止。"
+      },
+      "usageNote": "氛围器乐/轻钢琴候选，完整解码已验，主观听感尚未试听。",
+      "file": "./assets/audio/files/music-cylinder-7-edbf9b890bfa.m4a"
+    },
+    {
+      "id": "music-meditation-impromptu-01",
+      "name": "Meditation Impromptu 01 · 轻钢琴",
+      "kind": "music",
+      "category": "meditation",
+      "approved": true,
+      "sourceURL": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1100163",
+      "author": "Kevin MacLeod",
+      "license": {
+        "name": "CC-BY-4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/",
+        "embeddable": true,
+        "attribution": "\"Meditation Impromptu 01\" Kevin MacLeod (incompetech.com). Licensed under Creative Commons: By Attribution 4.0 License (https://creativecommons.org/licenses/by/4.0/). 本包未修改作者音频。",
+        "attributionRequired": true
+      },
+      "productEmbedded": true,
+      "sha256": "ac1332a12fe020cbeee206c7f33a82e29109d5ce63636e3302454e3bdfc36187",
+      "durationSeconds": 212.7934693877551,
+      "playback": {
+        "loop": false,
+        "gain": 0.65,
+        "fadeOutSeconds": 2,
+        "loopNote": "保留原作者音乐文件，完整播放不循环；网页音量较低，随本页期限渐弱停止。"
+      },
+      "usageNote": "氛围器乐/轻钢琴候选，完整解码已验，主观听感尚未试听。",
+      "file": "./assets/audio/files/music-meditation-impromptu-01-ac1332a12fe0.mp3"
+    }
+  ],
+  "links": [
+    {
+      "id": "guide-mandarin-breathing",
+      "name": "正念呼吸练习",
+      "kind": "guide",
+      "url": "https://caps.sa.ucsb.edu/sites/default/files/2023-10/Mindfulness%20Breathing%20-%20Mandarin_0.m4a",
+      "sourcePage": "https://caps.sa.ucsb.edu/resources/relaxation-resources",
+      "publisher": "UCSB CAPS",
+      "approved": true,
+      "language": "普通话",
+      "durationSeconds": 278.012517,
+      "accessNote": "官方音频外部打开；本页计时不控制外部播放"
+    },
+    {
+      "id": "guide-mandarin-body-scan",
+      "name": "身体扫描",
+      "kind": "guide",
+      "url": "https://caps.sa.ucsb.edu/sites/default/files/2023-10/Body%20Scan%20-%20Mandarin.m4a",
+      "sourcePage": "https://caps.sa.ucsb.edu/resources/relaxation-resources",
+      "publisher": "UCSB CAPS",
+      "approved": true,
+      "language": "普通话",
+      "durationSeconds": 342.169252,
+      "accessNote": "官方音频外部打开；本页计时不控制外部播放"
+    },
+    {
+      "id": "guide-mandarin-self-love",
+      "name": "自我肯定，爱自己",
+      "kind": "guide",
+      "url": "https://caps.sa.ucsb.edu/sites/default/files/2023-10/Self-%20Love_Positive%20Affirmation%20-%20Mandarin.m4a",
+      "sourcePage": "https://caps.sa.ucsb.edu/resources/relaxation-resources",
+      "publisher": "UCSB CAPS",
+      "approved": true,
+      "language": "普通话",
+      "durationSeconds": 491.58966,
+      "accessNote": "官方音频外部打开；本页计时不控制外部播放"
+    },
+    {
+      "id": "guide-english-mindfulness",
+      "name": "Mindfulness Meditation",
+      "kind": "guide",
+      "url": "https://caps.sa.ucsb.edu/sites/default/files/2020-07/mindfulness_dz.mp3",
+      "sourcePage": "https://caps.sa.ucsb.edu/resources/relaxation-resources",
+      "publisher": "UCSB CAPS",
+      "approved": true,
+      "language": "英语",
+      "durationSeconds": 478.589417,
+      "accessNote": "官方音频外部打开；本页计时不控制外部播放"
+    },
+    {
+      "id": "guide-hku-cartoon",
+      "name": "静观练习卡通系列（官网视频）",
+      "kind": "guide",
+      "url": "https://www.youthwellbeing.hku.hk/mindfulness-practice-cartoon?lang=zh",
+      "publisher": "香港青年协会 / 香港大学",
+      "approved": true,
+      "language": "普通话、粤语",
+      "durationSeconds": null,
+      "accessNote": "官网入口；本轮未验证具体视频播放和时长"
+    }
+  ]
+}

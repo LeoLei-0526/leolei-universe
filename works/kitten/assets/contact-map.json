@@ -1,0 +1,217 @@
+{
+  "schema": "web-kitten-ball-contacts-v1",
+  "state": "playing",
+  "coordinate_space": "注册PNG原生画布坐标；不是页面CSS坐标",
+  "frame_canvas": [
+    608,
+    560
+  ],
+  "origin": [
+    320,
+    528
+  ],
+  "baseline_y": 528,
+  "ball_embedded_in_cat_frames": false,
+  "contacts": [
+    {
+      "name": "前推",
+      "segment": "push",
+      "frame": 2,
+      "point": [
+        547,
+        494
+      ],
+      "torso_side": "screen-right",
+      "motion": "低头、低位直臂向外轻拨",
+      "radius": 24,
+      "paw_tip_registered_xy": [
+        547,
+        494
+      ],
+      "paw_tip_source_frame_xy": [
+        504,
+        433
+      ],
+      "paw_tip_generated_source_xy": [
+        1588,
+        576
+      ],
+      "generated_source": "generated/playing-push-v2.png",
+      "final_rgba_at_point": [
+        201,
+        193,
+        191,
+        133
+      ],
+      "original_rgba_at_point": [
+        201,
+        193,
+        191,
+        133
+      ],
+      "ball_center_example_registered_xy": [
+        567,
+        494
+      ],
+      "source_coordinate_reconstruction_exact": true,
+      "visual_annotation": "previews/接触标定-02.png"
+    },
+    {
+      "name": "收接",
+      "segment": "catch",
+      "frame": 5,
+      "point": [
+        520,
+        448
+      ],
+      "torso_side": "screen-right",
+      "motion": "低位弯腕勾接，爪尖在躯干外侧；接回弹球",
+      "radius": 24,
+      "paw_tip_registered_xy": [
+        520,
+        448
+      ],
+      "paw_tip_source_frame_xy": [
+        496,
+        397
+      ],
+      "paw_tip_generated_source_xy": [
+        1084,
+        517
+      ],
+      "generated_source": "generated/playing-catch-v2.png",
+      "final_rgba_at_point": [
+        206,
+        195,
+        195,
+        141
+      ],
+      "original_rgba_at_point": [
+        206,
+        195,
+        195,
+        141
+      ],
+      "ball_center_example_registered_xy": [
+        540,
+        448
+      ],
+      "source_coordinate_reconstruction_exact": true,
+      "visual_annotation": "previews/接触标定-05.png"
+    }
+  ],
+  "segments": [
+    {
+      "id": "push",
+      "label": "低位前推与自然收爪",
+      "source_frame_range": [
+        0,
+        3
+      ],
+      "playback_frames": [
+        0,
+        1,
+        2,
+        3,
+        2,
+        1,
+        0
+      ],
+      "durations_ms": [
+        850,
+        190,
+        180,
+        220,
+        140,
+        160,
+        650
+      ],
+      "contact_frame": 2,
+      "contact_step": 2,
+      "contact_event_count": 1,
+      "recovery_note": "后半段用已生成的伸爪姿态恢复，不重复发接触事件"
+    },
+    {
+      "id": "catch",
+      "label": "外侧弯腕收接",
+      "source_frame_range": [
+        4,
+        7
+      ],
+      "playback_frames": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "durations_ms": [
+        240,
+        190,
+        240,
+        1050
+      ],
+      "contact_frame": 5,
+      "contact_step": 1,
+      "contact_event_count": 1,
+      "recovery_note": "独立生成的勾接动作，不是前推逆播"
+    }
+  ],
+  "recommended_default_sequence": [
+    0,
+    1,
+    2,
+    3,
+    2,
+    1,
+    0,
+    4,
+    5,
+    6,
+    7
+  ],
+  "recommended_sequence_durations_ms": [
+    850,
+    190,
+    180,
+    220,
+    140,
+    160,
+    650,
+    240,
+    190,
+    240,
+    1050
+  ],
+  "recommended_sequence_cycle_ms": 4110,
+  "observation_frames": [
+    0,
+    7
+  ],
+  "observation_hold_range_ms": [
+    550,
+    1800
+  ],
+  "long_pause_after_cycles": [
+    2,
+    4
+  ],
+  "long_pause_range_ms": [
+    1800,
+    3500
+  ],
+  "event_reason_contract": {
+    "first": "start",
+    "automatic": "auto",
+    "manual": "manual",
+    "meditating": "no-contact-events"
+  },
+  "rendering": {
+    "ball_layer": "球在猫层下面，使爪尖少量遮挡球；碰后球向身体外侧移动",
+    "ball_center_formula": "页面先将paw_tip_registered_xy转换到CSS；球心=(paw_css.x+radius_css-overlap_css,paw_css.y)",
+    "overlap_source_recommendation_px": 4,
+    "source_radius_example_px": 24,
+    "occlusion": "仅爪尖外侧接触，不让球跨越躯干",
+    "catch_height_note": "收接爪尖比前推高46个源像素；应安排小球回弹上升到448附近，不能始终贴地却宣布此帧接触",
+    "canvas_note": "playing完整608×560留出了外伸爪；不要把它扭成448×544或裁爪。按origin对齐躯干，并用真实canvas等比换算接触点。"
+  }
+}
