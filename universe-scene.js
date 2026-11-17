@@ -15,7 +15,7 @@
   const galaxy=new T.Group();galaxy.name='shared-nebula';galaxy.rotation.z=-.13;scene.add(galaxy);
   const worldScale=1.25;galaxy.scale.setScalar(worldScale);
   const atmosphere=new T.Group();atmosphere.name='ambient-clouds';galaxy.add(atmosphere);
-  const U={uTime:{value:0},uPixel:{value:1},uBrightness:{value:.9},uMist:{value:.9},uWarmth:{value:.55},uEmphasis:{value:1},uViewDistance:{value:25}};
+  const U={uTime:{value:0},uOrbit:{value:0},uPixel:{value:1},uBrightness:{value:.9},uMist:{value:.9},uWarmth:{value:.55},uEmphasis:{value:1},uViewDistance:{value:25}};
   let seed=192837;
   const rand=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
   const normal=()=>Math.sqrt(-2*Math.log(Math.max(rand(),.000001)))*Math.cos(6.283185*rand());
@@ -36,8 +36,17 @@
   dustSprite.minFilter=dustSprite.magFilter=T.LinearFilter;dustSprite.generateMipmaps=false;dustSprite.needsUpdate=true;
   U.uDustMap={value:dustSprite};
   const vertex=`attribute vec3 tint;attribute float size;attribute float opacity;attribute float phase;
-    uniform float uPixel;uniform float uTime;uniform float uEmphasis;varying vec3 vTint;varying float vOpacity;varying float vDiameter;varying float vCore;varying float vDustScale;
-    void main(){vec4 mv=modelViewMatrix*vec4(position,1.);vTint=tint;
+    uniform float uPixel;uniform float uTime;uniform float uOrbit;uniform float uEmphasis;varying vec3 vTint;varying float vOpacity;varying float vDiameter;varying float vCore;varying float vDustScale;
+    void main(){vec3 point=position;
+      #ifdef ORBITAL
+        // Softened, approximately flat rotation curve. Time is artistically accelerated.
+        // Only decorative stars orbit; project markers retain their authored positions.
+        vec2 radial=point.xz-vec2(.4,-.1);float r=length(radial);
+        float angle=uOrbit*.055/sqrt(r*r+9.);
+        float cs=cos(angle),sn=sin(angle);
+        point.xz=vec2(cs*radial.x+sn*radial.y,-sn*radial.x+cs*radial.y)+vec2(.4,-.1);
+      #endif
+      vec4 mv=modelViewMatrix*vec4(point,1.);vTint=tint;
       vOpacity=opacity*uEmphasis*smoothstep(.25,1.4,-mv.z);
       gl_Position=projectionMatrix*mv;
       float depth=max(.6,-mv.z);
@@ -72,11 +81,12 @@
     void main(){float d=length(gl_PointCoord-.5)*2.;if(d>1.)discard;
       vec3 c=vTint;c.r*=.82+uWarmth*.34;
       gl_FragColor=vec4(c,exp(-d*d*5.)*(1.-smoothstep(.65,1.,d))*vOpacity*uMist);}`;
-  function makePoints(pos,col,size,alpha,phase,frag,parent=galaxy,twinkle=false){
+  function makePoints(pos,col,size,alpha,phase,frag,parent=galaxy,twinkle=false,orbital=false){
     const g=new T.BufferGeometry();
     for(const [k,v,n] of [['position',pos,3],['tint',col,3],['size',size,1],['opacity',alpha,1],['phase',phase,1]])g.setAttribute(k,new T.BufferAttribute(new Float32Array(v),n));
     let vs=twinkle?vertex.replace('vOpacity=opacity*','vOpacity=opacity*(.91+.09*sin(uTime*.5+phase))*'):vertex;
     const defines=frag===starFrag?{DUST:1}:frag===glowFrag?{LUMINOUS:1}:{};
+    if(orbital)defines.ORBITAL=1;
     const mat=new T.ShaderMaterial({defines,uniforms:{...U,uEmphasis:{value:1}},vertexShader:vs,fragmentShader:frag,extensions:{derivatives:true},transparent:true,depthWrite:false,depthTest:false,blending:T.AdditiveBlending});
     const points=new T.Points(g,mat);points.frustumCulled=false;parent.add(points);return points;
   }
@@ -88,8 +98,8 @@
       else{
         // A smooth radial envelope makes one coherent, gently rounded silhouette.
         r=Math.sqrt(-2*Math.log(1-rand()*.985))*region.radius*.36;
-        const diffuse=rand()<.72;
-        const angle=diffuse?rand()*Math.PI*2:(i%2)*Math.PI+r*.8+Math.sin(r*1.7)*.16+normal()*(.32+.045*r);
+        const diffuse=rand()<.52;
+        const angle=diffuse?rand()*Math.PI*2:(i%2)*Math.PI+.35+Math.log(1+r*.55)*2.3+normal()*(.24+.025*r);
         const jitter=.06+r*.035;
         x=Math.cos(angle)*r+normal()*jitter;z=Math.sin(angle)*r+normal()*jitter;
         // Bulging, warped clouds have volume above and below each local star field.
@@ -110,11 +120,11 @@
         const variation=.65+rand()*.65;rgb=rgb.map(v=>v*variation);
         const power=Math.pow(rand(),4);
         const lane=.5+.5*Math.pow(.5+.5*Math.sin(x*.45+z*.3+Math.sin(z*.4)),2);
-        s.push(.20+power*.30);a.push((.045+power*.75)*lane*(1+.5*Math.exp(-r*r/2.1)));
+        s.push(.20+power*.30);a.push((.045+power*.75)*lane*(1+.5*Math.exp(-r*r/2.1))*.78);
       }
       c.push(...rgb);ph.push(rand()*6.28);
     }
-    const points=makePoints(p,c,s,a,ph,kind==='fog'?fogFrag:kind==='bright'?glowFrag:starFrag,kind==='fog'?atmosphere:galaxy,kind==='bright');points.name='unified-'+kind;return points;
+    const points=makePoints(p,c,s,a,ph,kind==='fog'?fogFrag:kind==='bright'?glowFrag:starFrag,kind==='fog'?atmosphere:galaxy,false,true);points.name='unified-'+kind;return points;
   }
   // Render to floating-point light buffers so many faint particles accumulate smoothly.
   const hdr=renderer.capabilities.isWebGL2&&renderer.extensions.has('EXT_color_buffer_float');
@@ -137,7 +147,7 @@
   // Categories are navigable regions inside one cloud, not three competing bright cores.
   const wholeCloud={position:[.4,.2,-.1],radius:13,flatten:.94,angle:0};
   const veil=new T.Mesh(new T.PlaneGeometry(32,30),veilMat);veil.name='unified-core';veil.rotation.x=-Math.PI/2;veil.position.set(...wholeCloud.position);galaxy.add(veil);
-  cloud(mobile?360:700,'fog',wholeCloud);cloud(mobile?66000:126000,'dust',wholeCloud);cloud(mobile?1500:3200,'bright',wholeCloud);
+  cloud(mobile?360:700,'fog',wholeCloud);cloud(mobile?104000:208000,'dust',wholeCloud);cloud(mobile?1900:4200,'bright',wholeCloud);
   // One enclosing cloud shares the same center and radial color gradient.
   // A procedural veil supplies low-frequency color; crisp dust stays a separate layer.
   const nebulaMat=new T.ShaderMaterial({uniforms:U,transparent:true,depthWrite:false,depthTest:false,blending:T.AdditiveBlending,side:T.DoubleSide,
@@ -171,7 +181,7 @@
       const height=(normal()*(.45+1.35*envelope)+Math.sin(x*.26)*.25)*thickness;
       p.push(x+.4,height,z-.1);c.push(...tintAt(r));
       s.push(.2+Math.pow(rand(),4)*.25);a.push((.03+Math.pow(rand(),4)*.25)*envelope);ph.push(rand()*6.28);
-    }makePoints(p,c,s,a,ph,starFrag);
+    }makePoints(p,c,s,a,ph,starFrag,galaxy,false,true);
   }
   // Soft particles occupy a 3D ellipsoid, not a stack of flat camera-facing sheets.
   {const p=[],c=[],s=[],a=[],ph=[];
@@ -180,7 +190,7 @@
       const density=Math.exp(-(x*x+z*z)/140-y*y/12);
       p.push(x+.4,y,z-.1);c.push(...tintAt(Math.hypot(x,z)));
       s.push(110+rand()*100);a.push(.018*density);ph.push(rand()*6.28);
-    }makePoints(p,c,s,a,ph,fogFrag,atmosphere);
+    }makePoints(p,c,s,a,ph,fogFrag,atmosphere,false,true);
   }
   // A sparse shared field adds depth without inventing a fourth galactic core.
   const p=[],c=[],s=[],a=[],ph=[];
@@ -192,24 +202,24 @@
   // Extend the same galaxy with sparse spiral outskirts and a deeper stellar halo.
   // Separate seeded generation preserves every existing star and authored content anchor.
   const savedSeed=seed;seed=741892;
-  const outerCount=mobile?65000:220000;
+  const outerCount=mobile?110000:390000;
   {const p=[],c=[],s=[],a=[],ph=[];
     for(let i=0;i<outerCount;i++){
       const r=4+Math.pow(rand(),.68)*22,arm=i%2;
       const diffuse=rand()<.28;
-      const angle=diffuse?rand()*Math.PI*2:arm*Math.PI+.35+r*.30+normal()*(.10+.006*r);
+      const angle=diffuse?rand()*Math.PI*2:arm*Math.PI+.35+Math.log(1+r*.55)*2.3+normal()*(.10+.006*r);
       const x=Math.cos(angle)*r,z=Math.sin(angle)*r*.86;
       const y=(normal()*(.32+.025*r)+Math.sin(angle*2+r*.18)*.35)*thickness;
       p.push(x+.4,y,z-.1);
       const t=clamp((r-4)/22,0,1),fade=Math.pow(1-t,1.15),power=Math.pow(rand(),4);
       const tint=tintAt(Math.min(13,6+r*.4));
       c.push(...tint.map((v,j)=>mix(v,[.53,.64,.91][j],.32+rand()*.2)));
-      s.push(.20+power*.27);a.push((.055+power*.65)*fade*(diffuse?.48:1));ph.push(rand()*6.28);
+      s.push(.20+power*.27);a.push((.055+power*.65)*fade*(diffuse?.48:1)*.80);ph.push(rand()*6.28);
     }
-    const outskirts=makePoints(p,c,s,a,ph,starFrag);outskirts.name='extended-spiral-dust';
+    const outskirts=makePoints(p,c,s,a,ph,starFrag,galaxy,false,true);outskirts.name='extended-spiral-dust';
   }
   {const p=[],c=[],s=[],a=[],ph=[];
-    for(let i=0;i<(mobile?10000:24000);i++){
+    for(let i=0;i<(mobile?18000:48000);i++){
       const r=35+rand()*65,az=rand()*Math.PI*2,h=rand()*2-1,q=Math.sqrt(1-h*h);
       p.push(Math.cos(az)*q*r,h*r*.65,Math.sin(az)*q*r);
       c.push(.62,.71,.94);s.push(.25+Math.pow(rand(),4)*.36);a.push(.12+Math.pow(rand(),3)*.65);ph.push(0);
@@ -390,9 +400,11 @@
     const aiming=document.querySelector('.star-target:hover,.region-target:hover,#universe-heart:hover,.star-target:focus-visible,.region-target:focus-visible,#universe-heart:focus-visible');
     rotationMoving=sceneSettings.autoRotate&&!paused&&!reduced&&!flight&&!drag&&!heartOpen&&selected<0&&activeRegion<0&&view.distance>=home().distance*.93&&now>motionHoldUntil&&!aiming&&!document.hidden;
     if(rotationMoving)spin=(spin+dt*rotationSpeed)%(Math.PI*2);
-    if(!paused)elapsed+=dt;U.uTime.value=elapsed;galaxy.rotation.y=spin;
+    if(!paused&&!reduced)elapsed+=dt;U.uTime.value=elapsed;galaxy.rotation.y=spin;
+    const flowing=sceneSettings.autoRotate&&!paused&&!reduced&&!flight&&!drag&&!heartOpen&&selected<0&&now>motionHoldUntil&&!aiming;
+    if(flowing)U.uOrbit.value+=dt;
     // Ambient cloud flow continues inside a category; project stars remain anchored.
-    atmosphere.rotation.y=elapsed*.002;atmosphere.rotation.x=Math.sin(elapsed*.08)*.018;
+    atmosphere.rotation.y=U.uOrbit.value*.0012;atmosphere.rotation.x=Math.sin(U.uOrbit.value*.025)*.012;
     if(flight){let t=clamp((now-flight.started)/flight.duration,0,1);const e=t*t*t*(t*(t*6-15)+10);for(const k of ['yaw','pitch','distance'])view[k]=mix(flight.from[k],flight.to[k],e);view.pivot.lerpVectors(flight.from.pivot,flight.to.pivot,e);if(t===1){flight=null;document.body.classList.remove('travelling');}}
     else{if(!drag&&!reduced){target.yaw+=velocity.x*dt;target.pitch=clamp(target.pitch+velocity.y*dt,-.05,1.45);velocity.x*=Math.exp(-dt*4.5);velocity.y*=Math.exp(-dt*4.5);}const ease=reduced?1:1-Math.exp(-dt*9);for(const k of ['yaw','pitch','distance'])view[k]=mix(view[k],target[k],ease);view.pivot.lerp(target.pivot,ease);}
     parallax.x=mix(parallax.x,reduced||drag||selected>=0?0:cursor.x*.008,1-Math.exp(-dt*3));parallax.y=mix(parallax.y,reduced||drag||selected>=0?0:cursor.y*.005,1-Math.exp(-dt*3));
@@ -403,7 +415,8 @@
     fpsFrames++;if(now-fpsStart>1500){fps=fpsFrames*1000/(now-fpsStart);fpsStart=now;fpsFrames=0;}
   }
   requestAnimationFrame(frame);
-  window.galaxySample={renderer,scene,camera,uniforms:U,getState:()=>({version:10,hdr,paused,elapsed,selected,activeRegion,heartOpen,depth:thickness,ambientAngle:atmosphere.rotation.y,renderPasses:2,rotation:{angle:spin,moving:rotationMoving,periodSeconds:sceneSettings.rotationMinutes*60},flight:!!flight,view:{...view,pivot:view.pivot.toArray()},velocity:{...velocity},regions:regions.map(r=>({name:r.name,...r.screen,visible:!r.button.hidden})),stars:stars.map(s=>({id:s.id,name:s.name,region:s.region,...s.screen,visible:!s.button.hidden})),frames,fps})};
+  const particleCount=(()=>{let n=0;scene.traverse(o=>{if(o.isPoints)n+=o.geometry.attributes.position.count;});return n;})();
+  window.galaxySample={renderer,scene,camera,uniforms:U,getState:()=>({version:11,hdr,particleCount,orbitTime:U.uOrbit.value,paused,elapsed,selected,activeRegion,heartOpen,depth:thickness,ambientAngle:atmosphere.rotation.y,renderPasses:2,rotation:{angle:spin,moving:rotationMoving,periodSeconds:sceneSettings.rotationMinutes*60},flight:!!flight,view:{...view,pivot:view.pivot.toArray()},velocity:{...velocity},regions:regions.map(r=>({name:r.name,...r.screen,visible:!r.button.hidden})),stars:stars.map(s=>({id:s.id,name:s.name,region:s.region,...s.screen,visible:!s.button.hidden})),frames,fps})};
   window.dispatchEvent(new Event('universe:ready'));
 })();
 
