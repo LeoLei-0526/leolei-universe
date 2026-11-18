@@ -11,7 +11,7 @@
   catch(e){$('#loading').hidden=true;$('#error').hidden=false;return;}
   const host=$('#universe');host.appendChild(renderer.domElement);
   renderer.setClearColor(0x000000,1);
-  const scene=new T.Scene(),camera=new T.PerspectiveCamera(44,innerWidth/innerHeight,.1,240);
+  const scene=new T.Scene(),camera=new T.PerspectiveCamera(44,innerWidth/innerHeight,.025,240);
   const galaxy=new T.Group();galaxy.name='shared-nebula';galaxy.rotation.z=-.13;scene.add(galaxy);
   const worldScale=1.25;galaxy.scale.setScalar(worldScale);
   const atmosphere=new T.Group();atmosphere.name='ambient-clouds';galaxy.add(atmosphere);
@@ -35,8 +35,9 @@
   const dustSprite=new T.DataTexture(spritePixels,spriteSize,spriteSize,T.RGBAFormat);
   dustSprite.minFilter=dustSprite.magFilter=T.LinearFilter;dustSprite.generateMipmaps=false;dustSprite.needsUpdate=true;
   U.uDustMap={value:dustSprite};
+  U.uPointLimit={value:renderer.getContext().getParameter(renderer.getContext().ALIASED_POINT_SIZE_RANGE)[1]};
   const vertex=`attribute vec3 tint;attribute float size;attribute float opacity;attribute float phase;
-    uniform float uPixel;uniform float uTime;uniform float uOrbit;uniform float uEmphasis;varying vec3 vTint;varying float vOpacity;varying float vDiameter;varying float vCore;varying float vDustScale;
+    uniform float uPixel;uniform float uPointLimit;uniform float uTime;uniform float uOrbit;uniform float uEmphasis;varying vec3 vTint;varying float vOpacity;varying float vDiameter;varying float vCore;varying float vDustScale;varying float vNear;
     void main(){vec3 point=position;
       #ifdef ORBITAL
         // Softened, approximately flat rotation curve. Time is artistically accelerated.
@@ -47,31 +48,41 @@
         point.xz=vec2(cs*radial.x+sn*radial.y,-sn*radial.x+cs*radial.y)+vec2(.4,-.1);
       #endif
       vec4 mv=modelViewMatrix*vec4(point,1.);vTint=tint;
-      vOpacity=opacity*uEmphasis*smoothstep(.25,1.4,-mv.z);
+      vOpacity=opacity*uEmphasis*smoothstep(.12,.75,-mv.z);
       gl_Position=projectionMatrix*mv;
-      float depth=max(.6,-mv.z);
-      #ifdef HEART
+      float depth=max(.12,-mv.z);vNear=1.-smoothstep(3.,15.,depth);
+      #if defined(HEART) || defined(BEACON)
         gl_PointSize=clamp(82.*pow(23./depth,.23),64.,118.)*uPixel;
       #elif defined(DUST)
         vCore=clamp(size*pow(23./depth,.28),.19,.62);
-        gl_PointSize=max(2.,vCore*6.)*uPixel;
+        // Preserve the distant fine field, resolve nearby points into analytic stars.
+        float distantDiameter=max(2.,vCore*6.);
+        float nearDiameter=clamp(size*62./pow(depth,.72),2.,20.);
+        gl_PointSize=mix(distantDiameter,nearDiameter,vNear)*uPixel;
         float variance=vCore*vCore+.07/(uPixel*uPixel);
         vDustScale=(gl_PointSize/uPixel)/(6.*sqrt(variance));
         vOpacity*=vCore*vCore/variance;
-        vOpacity*=mix(.28,1.,smoothstep(2.,20.,depth));
+        vOpacity*=mix(.85,1.,smoothstep(2.,20.,depth));
       #elif defined(LUMINOUS)
-        gl_PointSize=clamp(size*pow(23./depth,.38),4.,36.)*uPixel;
+        float farSize=clamp(size*pow(23./depth,.38),4.,36.);
+        float nearSize=clamp(size*pow(23./depth,.72),4.,96.);
+        gl_PointSize=mix(farSize,nearSize,vNear)*uPixel;
       #else
         gl_PointSize=clamp(size*23./depth,.7,112.)*uPixel;
       #endif
-      vDiameter=gl_PointSize/uPixel;}`;
+      gl_PointSize=min(gl_PointSize,uPointLimit);vDiameter=gl_PointSize/uPixel;}`;
   const starFrag=`precision highp float;uniform float uBrightness;uniform float uWarmth;uniform sampler2D uDustMap;
-    varying vec3 vTint;varying float vOpacity;varying float vDustScale;
+    varying vec3 vTint;varying float vOpacity;varying float vDustScale;varying float vNear;
     void main(){vec2 uv=(gl_PointCoord-.5)*vDustScale+.5;
-      float core=texture2D(uDustMap,uv).a;
+      float distant=texture2D(uDustMap,uv).a;
+      float d=length(gl_PointCoord-.5)*2.;
+      float aa=max(fwidth(d),.012);
+      float nucleus=1.-smoothstep(.23-aa,.23+aa,d);
+      float halo=exp(-d*d*9.)*(1.-smoothstep(.65,1.,d));
+      float core=mix(distant,(nucleus+halo*.10)*1.8,vNear);
       vec3 c=vTint;c.r*=.82+uWarmth*.34;
-      gl_FragColor=vec4(mix(c,vec3(1.,.97,.94),.16),core*vOpacity*uBrightness);}`;
-  const glowFrag=`precision highp float;uniform float uBrightness;varying vec3 vTint;varying float vOpacity;
+      gl_FragColor=vec4(mix(c,vec3(1.,.97,.94),mix(.16,.52,vNear)),core*vOpacity*uBrightness);}`;
+  const glowFrag=`precision highp float;uniform float uBrightness;varying vec3 vTint;varying float vOpacity;varying float vNear;
     void main(){float d=length(gl_PointCoord-.5)*2.;if(d>1.)discard;
       #ifdef HEART
       {
@@ -83,10 +94,12 @@
         gl_FragColor=vec4(light,vOpacity*uBrightness*(1.-smoothstep(.7,1.,d)));return;
       }
       #endif
-      float core=exp(-d*d*480.);
+      float aa=max(fwidth(d),.005);
+      float disc=1.-smoothstep(.105-aa,.105+aa,d);
+      float core=mix(exp(-d*d*480.),disc*.80,vNear);
       float shoulder=exp(-d*d*65.);
       float halo=exp(-d*d*7.)*(1.-smoothstep(.65,1.,d));
-      vec3 light=mix(vTint,vec3(1.),.88)*core*5.5+vTint*(shoulder*.40+halo*.045);
+      vec3 light=mix(vTint,vec3(1.),mix(.88,.45,vNear))*core*5.5+vTint*(shoulder*.40+halo*mix(.045,.12,vNear));
       gl_FragColor=vec4(light,vOpacity*uBrightness);}`;
   const fogFrag=`precision highp float;uniform float uMist;uniform float uWarmth;
     varying vec3 vTint;varying float vOpacity;
@@ -153,7 +166,7 @@
   const veilMat=new T.ShaderMaterial({uniforms:U,transparent:true,depthWrite:false,depthTest:false,blending:T.AdditiveBlending,side:T.DoubleSide,
     vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
     fragmentShader:`varying vec2 vUv;uniform float uMist;uniform float uEmphasis;uniform float uViewDistance;void main(){vec2 p=(vUv-.5)*2.;float d=length(p);
-      float nearFade=mix(.30,1.,smoothstep(4.,16.,uViewDistance));
+      float nearFade=mix(.10,1.,smoothstep(2.,16.,uViewDistance));
       float a=(exp(-d*d*5.)*.25+exp(-d*d*80.)*.65)*(1.-smoothstep(.55,1.,d))*uMist*uEmphasis*nearFade;
       vec3 c=mix(vec3(1.,.43,.12),vec3(.25,.14,.41),smoothstep(.03,.55,d));gl_FragColor=vec4(c,a);}`});
   // Categories are navigable regions inside one cloud, not three competing bright cores.
@@ -185,7 +198,7 @@
   renderer.setRenderTarget(nebulaTexture);renderer.render(bakeScene,postCamera);renderer.setRenderTarget(null);
   bakeMat.dispose();bakeQuad.geometry.dispose();
   nebulaMat.uniforms={...U,uNebula:{value:nebulaTexture.texture}};
-  nebulaMat.fragmentShader='varying vec2 vUv;uniform sampler2D uNebula;uniform float uMist;void main(){vec4 cloud=texture2D(uNebula,vUv);gl_FragColor=vec4(cloud.rgb,cloud.a*uMist);}';
+  nebulaMat.fragmentShader='varying vec2 vUv;uniform sampler2D uNebula;uniform float uMist;uniform float uViewDistance;void main(){vec4 cloud=texture2D(uNebula,vUv);float nearFade=mix(.18,1.,smoothstep(2.,16.,uViewDistance));gl_FragColor=vec4(cloud.rgb,cloud.a*uMist*nearFade);}';
   {const p=[],c=[],s=[],a=[],ph=[];
     for(let i=0;i<(mobile?10000:22000);i++){
       const r=Math.sqrt(-2*Math.log(1-rand()*.99))*5.4,angle=rand()*Math.PI*2;
@@ -263,6 +276,26 @@
   const clone=v=>({...v,pivot:v.pivot.clone()});
   let view=home(),target=clone(view),beforeFocus=null;
   const regions=window.GALAXY_CONTENT.regions.map(r=>({...r,position:new T.Vector3(...r.position)}));
+  const beaconColors=[[.12,.72,1.],[1.,.16,.65],[.35,1.,.64]];
+  const beaconFrag=glowFrag.replace('#ifdef HEART', `#ifdef BEACON
+      {
+      vec2 p=abs(gl_PointCoord-.5)*2.;
+      float nucleus=exp(-d*d*460.);
+      float inner=exp(-d*d*62.);
+      float aura=exp(-d*d*10.)*(1.-smoothstep(.68,1.,d));
+      float rays=exp(-p.x*180.)*exp(-p.y*14.)+exp(-p.y*180.)*exp(-p.x*14.);
+      vec3 light=mix(vTint,vec3(1.),.62)*nucleus*4.5+vTint*(inner*.85+aura*.25+rays*.20);
+      gl_FragColor=vec4(light,vOpacity*uBrightness);return;
+      }
+      #endif
+      #ifdef HEART`);
+  const beaconPositions=regions.flatMap(r=>[r.position.x,r.position.y+.5,r.position.z-r.radius*.25]);
+  const regionBeacons=makePoints(beaconPositions,regions.flatMap((r,i)=>beaconColors[i%3]),regions.map(()=>82),regions.map(()=>.9),regions.map(()=>0),beaconFrag);
+  regionBeacons.name='category-colored-stars';regionBeacons.material.defines.BEACON=1;
+  const workColors={'kitten-pomodoro':[.12,.8,1.],'quiet-splash':[.22,.55,1.],'above-ten-meters':[.69,.26,1.],'qianqiu-louying':[1.,.48,.14],'overseas-drama':[1.,.15,.55]};
+  stars.forEach((s,i)=>projectLights.geometry.attributes.tint.setXYZ(i,...(workColors[s.id]||beaconColors[i%3])));
+  projectLights.geometry.attributes.tint.needsUpdate=true;
+  projectLights.material.fragmentShader=beaconFrag;projectLights.material.defines.BEACON=1;projectLights.material.needsUpdate=true;
   let activeRegion=-1,beforeRegion=null,zoomOrigin=null;
   const velocity={x:0,y:0},cursor={x:0,y:0},parallax={x:0,y:0},pointers=new Map();let drag=null,pinch=0;
   const projected=new T.Vector3(),world=new T.Vector3(),raycaster=new T.Raycaster();
@@ -275,7 +308,7 @@
     b.onpointerenter=()=>showHover(i);b.onpointerleave=()=>showHover(-1);b.onfocus=()=>showHover(i);b.onblur=()=>showHover(-1);b.onclick=()=>focusStar(i);
     b.onwheel=onWheel;
   });
-  function showHover(i){hovered=i;tooltip.hidden=true;const alpha=projectLights.geometry.attributes.opacity;stars.forEach((s,j)=>alpha.setX(j,j===i?1.55:.9));alpha.needsUpdate=true;}
+  function showHover(i){hovered=i;stars.forEach((s,j)=>s.button.toggleAttribute('data-star-active',j===i));tooltip.hidden=true;const alpha=projectLights.geometry.attributes.opacity;stars.forEach((s,j)=>alpha.setX(j,j===i?1.55:.9));alpha.needsUpdate=true;}
   regions.forEach((r,i)=>{const b=document.createElement('button');b.className='region-target';const number=document.createElement('small'),title=document.createElement('strong'),detail=document.createElement('span');number.textContent=String(i+1).padStart(2,'0');title.textContent=r.name;const count=stars.filter(s=>s.region===i).length;detail.textContent=count?count+' 件作品 · 靠近探索':'创作区域 · 待加入作品';b.append(number,title,detail);b.setAttribute('aria-label','进入'+r.name+'星系');b.onclick=()=>enterRegion(i);b.addEventListener('wheel',onWheel,{passive:false});$('#region-targets').appendChild(b);r.button=b;});
   function regionView(i){galaxy.updateMatrixWorld(true);const center=galaxy.localToWorld(regions[i].position.clone());
     // Offset the camera target to leave a quiet introduction column beside the content.
@@ -356,7 +389,9 @@
   function zoomAt(x,y,factor){
     if(heartOpen)return;
     cancelFlight();setJourney('');if(activeRegion<0&&factor<1&&!zoomOrigin)zoomOrigin=clone(view);
-    const anchor=zoomAnchor(x,y),previous=target.distance,next=clamp(previous*factor,3.6,overview().distance*1.15);
+    const anchor=zoomAnchor(x,y),previous=target.distance,
+      gentleFactor=Math.pow(factor,mix(.45,1.,clamp(previous/7.,0,1))),
+      next=clamp(previous*gentleFactor,.28,overview().distance*1.15);
     // Exact dolly ratio keeps the world point beneath the cursor in the same screen location.
     if(selected<0)target.pivot.lerp(anchor,1-next/previous);
     target.distance=next;discoverRegion(anchor,next<previous);
@@ -364,7 +399,7 @@
   function onWheel(e){e.preventDefault();const delta=clamp(e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?innerHeight:1),-160,160);zoomAt(e.clientX,e.clientY,Math.exp(delta*.0014));}
   host.addEventListener('wheel',onWheel,{passive:false});
   let gestureStart=null,gestureMoved=false,suppressClickUntil=0;
-  const isScene=e=>e.target instanceof Element&&e.target.closest('#universe,#star-targets,#region-targets');
+  const isScene=e=>e.target instanceof Element&&e.target.closest('#universe,#star-targets,#region-targets,#universe-heart');
   document.addEventListener('pointerdown',e=>{
     if(!isScene(e)||heartOpen)return;
     cancelFlight();showHover(-1);e.target.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
@@ -395,16 +430,21 @@
   function render(){renderer.setRenderTarget(light);renderer.render(scene,camera);renderer.setRenderTarget(null);renderer.render(postScene,postCamera);}
   function updateMarkers(){
     galaxy.updateMatrixWorld(true);camera.updateMatrixWorld(true);
-    world.copy(heartPosition);galaxy.localToWorld(world);projected.copy(world).project(camera);const hx=(projected.x*.5+.5)*innerWidth,hy=(-projected.y*.5+.5)*innerHeight;const heart=$('#universe-heart');heart.hidden=heartOpen||activeRegion>=0||selected>=0||projected.z>1||hx<40||hx>innerWidth-40||hy<100||hy>innerHeight-150;heart.style.left=hx+'px';heart.style.top=(hy+24)+'px';
+    world.copy(heartPosition);galaxy.localToWorld(world);projected.copy(world).project(camera);const hx=(projected.x*.5+.5)*innerWidth,hy=(-projected.y*.5+.5)*innerHeight;const heart=$('#universe-heart');heart.hidden=heartOpen||activeRegion>=0||selected>=0||projected.z>1||hx<40||hx>innerWidth-40||hy<100||hy>innerHeight-150;heart.style.left=hx+'px';heart.style.top=hy+'px';
     stars.forEach((star,i)=>{world.copy(star.position);galaxy.localToWorld(world);projected.copy(world).project(camera);const x=(projected.x*.5+.5)*innerWidth,y=(-projected.y*.5+.5)*innerHeight;
       const closeEnough=activeRegion===(star.region??0)||(activeRegion<0&&view.distance<home().distance*.82);
       star.screen={x,y};const visible=closeEnough&&selected<0&&projected.z<1&&projected.z>-1&&x>24&&x<innerWidth-24&&y>90&&y<innerHeight-100;
+      projectLights.geometry.attributes.opacity.setX(i,selected===i?1.1:visible?(hovered===i?1.25:.85):0);
+      projectLights.geometry.attributes.opacity.needsUpdate=true;
       star.button.hidden=!visible;star.button.style.transform=`translate(${x-22}px,${y-22}px)`;star.button.classList.toggle('label-left',x>innerWidth-230);
       if(hovered===i&&visible){tooltip.style.left=clamp(x+25,8,innerWidth-120)+'px';tooltip.style.top=clamp(y-16,8,innerHeight-80)+'px';}
     });
-    regions.forEach(r=>{world.copy(r.position);world.z-=r.radius*.25;world.y+=.5;galaxy.localToWorld(world);projected.copy(world).project(camera);const x=(projected.x*.5+.5)*innerWidth,y=(-projected.y*.5+.5)*innerHeight;
+    regions.forEach((r,i)=>{world.copy(r.position);world.z-=r.radius*.25;world.y+=.5;galaxy.localToWorld(world);projected.copy(world).project(camera);const x=(projected.x*.5+.5)*innerWidth,y=(-projected.y*.5+.5)*innerHeight;
       r.screen={x,y};r.button.hidden=activeRegion>=0||projected.z>1||projected.z< -1||y<170||y>innerHeight-170;
-      r.button.style.left=clamp(x,innerWidth<650?85:120,innerWidth-(innerWidth<650?85:120))+'px';r.button.style.top=y+'px';});
+      r.button.hidden=r.button.hidden||x<28||x>innerWidth-28;
+      r.button.style.left=x+'px';r.button.style.top=y+'px';
+      regionBeacons.geometry.attributes.opacity.setX(i,r.button.hidden||document.body.classList.contains('immersive')?0:r.button.matches(':hover,:focus-visible')?1.25:.9);
+      regionBeacons.geometry.attributes.opacity.needsUpdate=true;});
   }
   document.addEventListener('visibilitychange',()=>{visible=!document.hidden;last=performance.now();});
   renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();visible=false;$('#error').hidden=false;});
@@ -415,7 +455,7 @@
     if(rotationMoving)spin=(spin+dt*rotationSpeed)%(Math.PI*2);
     if(!paused&&!reduced)elapsed+=dt;U.uTime.value=elapsed;galaxy.rotation.y=spin;
     const flowing=sceneSettings.autoRotate&&!paused&&!reduced&&!flight&&!drag&&!heartOpen&&selected<0&&now>motionHoldUntil&&!aiming;
-    if(flowing)U.uOrbit.value+=dt;
+    if(flowing)U.uOrbit.value+=dt*mix(.035,1.,clamp((view.distance-.28)/14.,0,1));
     // Ambient cloud flow continues inside a category; project stars remain anchored.
     atmosphere.rotation.y=U.uOrbit.value*.0012;atmosphere.rotation.x=Math.sin(U.uOrbit.value*.025)*.012;
     if(flight){let t=clamp((now-flight.started)/flight.duration,0,1);const e=t*t*t*(t*(t*6-15)+10);for(const k of ['yaw','pitch','distance'])view[k]=mix(flight.from[k],flight.to[k],e);view.pivot.lerpVectors(flight.from.pivot,flight.to.pivot,e);if(t===1){flight=null;document.body.classList.remove('travelling');}}
@@ -429,7 +469,7 @@
   }
   requestAnimationFrame(frame);
   const particleCount=(()=>{let n=0;scene.traverse(o=>{if(o.isPoints)n+=o.geometry.attributes.position.count;});return n;})();
-  window.galaxySample={renderer,scene,camera,uniforms:U,getState:()=>({version:11,hdr,particleCount,orbitTime:U.uOrbit.value,paused,elapsed,selected,activeRegion,heartOpen,depth:thickness,ambientAngle:atmosphere.rotation.y,renderPasses:2,rotation:{angle:spin,moving:rotationMoving,periodSeconds:sceneSettings.rotationMinutes*60},flight:!!flight,view:{...view,pivot:view.pivot.toArray()},velocity:{...velocity},regions:regions.map(r=>({name:r.name,...r.screen,visible:!r.button.hidden})),stars:stars.map(s=>({id:s.id,name:s.name,region:s.region,...s.screen,visible:!s.button.hidden})),frames,fps})};
+  window.galaxySample={renderer,scene,camera,uniforms:U,getState:()=>({version:12,hdr,particleCount,orbitTime:U.uOrbit.value,paused,elapsed,selected,activeRegion,heartOpen,depth:thickness,ambientAngle:atmosphere.rotation.y,renderPasses:2,rotation:{angle:spin,moving:rotationMoving,periodSeconds:sceneSettings.rotationMinutes*60},flight:!!flight,view:{...view,pivot:view.pivot.toArray()},velocity:{...velocity},regions:regions.map(r=>({name:r.name,...r.screen,visible:!r.button.hidden})),stars:stars.map(s=>({id:s.id,name:s.name,region:s.region,...s.screen,visible:!s.button.hidden})),frames,fps})};
   window.dispatchEvent(new Event('universe:ready'));
 })();
 
