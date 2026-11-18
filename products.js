@@ -2,6 +2,7 @@
 (()=>{
  const $=s=>document.querySelector(s);
  const projects=window.PORTFOLIO_DATA.projects.filter(p=>p.visible);
+ const actions=document.createElement('div'),secondary=document.createElement('a');actions.className='project-actions';secondary.id='project-secondary-link';secondary.className='project-link';secondary.target='_blank';secondary.rel='noopener noreferrer';secondary.hidden=true;$('#project-link').before(actions);actions.append($('#project-link'),secondary);
  let current=0;
  const covers={
   focus:'<div class="mock-window"><div class="mock-bar"><span>专注时光</span><span>专注 · 休息</span></div><div class="timer-ring"><div><small>留给眼前这一件事</small><strong>25:00</strong><span>FOCUS ON THE MOMENT</span></div></div><div class="mock-pill">开始专注</div></div>',
@@ -21,11 +22,13 @@
   const story=!p.demo&&p.steps.length===0;$('#star-card').classList.toggle('personal-story',story);$('.project-footer').hidden=projects.filter(x=>x.category===p.category).length<2;
   for(const [id,value]of Object.entries({'project-kind':p.kind,'project-summary':p.summary,'fact-direction':p.direction,'fact-focus':p.focus,'project-problem':p.problem,'project-experience':p.experience,'project-principle':p.principle}))$('#'+id).textContent=value;
   const siblings=projects.filter(x=>x.category===p.category);$('#project-counter').textContent=`PROJECT ${String(siblings.indexOf(p)+1).padStart(2,'0')} / ${String(siblings.length).padStart(2,'0')}`;
-  const cover=$('#project-cover');cover.className='cover '+p.theme;cover.replaceChildren();
+  const cover=$('#project-cover');cover.className='cover '+p.theme;cover.style.aspectRatio=p.category==='stories'?'16 / 9':'';cover.replaceChildren();
   if(p.cover){const img=document.createElement('img');img.src=p.cover;img.alt=p.name+'项目封面';cover.append(img);}else if(p.demo&&covers[p.theme]){cover.innerHTML=covers[p.theme];}else{const name=document.createElement('h3');name.textContent=p.name;cover.append(name);}
   cover.setAttribute('aria-label',p.name+'项目封面');$('.cover-caption').textContent=p.cover?(p.id==='kitten-pomodoro'?'实际使用界面 · 小猫番茄钟':'作品画面'):p.demo?'界面草图 · 用于展示内容结构':'作品展示';
   $('.project-tag span:last-child').textContent=p.demo?'示例内容':'作品';$('.content-note').hidden=!p.demo;
-  $('#project-link').hidden=!p.link;$('#project-link').href=p.link||'#';$('#project-link').textContent=p.id==='kitten-pomodoro'?'打开小猫番茄钟 ↗':'打开作品 ↗';
+  $('#project-link').hidden=!p.link;$('#project-link').href=p.link||'#';$('#project-link').textContent=(p.linkLabel||(p.id==='kitten-pomodoro'?'打开小猫番茄钟':'打开作品'))+' ↗';
+  secondary.hidden=!p.secondaryLink;secondary.href=p.secondaryLink||'#';secondary.textContent=(p.secondaryLinkLabel||'查看资料')+' ↗';
+  $('.takeaway').hidden=!p.principle;
   $('#next-project').disabled=$('#previous-project').disabled=siblings.length<2;
   $('#process-panel h3').textContent=p.steps.length?'设计思路':'这部分内容正在整理。';
   $('#project-process').replaceChildren(...p.steps.map(([title,body])=>{const li=document.createElement('li'),h=document.createElement('h4'),para=document.createElement('p');h.textContent=title;para.textContent=body;li.append(h,para);return li;}));
