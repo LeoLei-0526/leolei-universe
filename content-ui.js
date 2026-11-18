@@ -21,6 +21,7 @@
  $('.overview-intro h1').textContent=data.site.tagline;$('.overview-intro p').textContent=data.site.subtitle;
  $('#universe-heart strong').textContent=data.site.title;$('#universe-heart').setAttribute('aria-label',data.site.title+'，关于我');
  $('#about-title').textContent=data.site.title;$('.about-lead').textContent=data.site.intro;$('#about-copy').replaceChildren(...data.site.description.split(/\n\s*\n/).filter(Boolean).map(text=>{const p=document.createElement('p');p.textContent=text;return p;}));
+ for(const p of $('#about-copy').children){const match=/^我的联系方式：\s*([^\s@]+@[^\s@]+\.[^\s@]+)$/.exec(p.textContent);if(match){p.classList.add('about-contact');const a=document.createElement('a');a.href='mailto:'+match[1];a.textContent=match[1];p.replaceChildren(document.createTextNode('我的联系方式：'),a);}}
  $('.about-note').hidden=true;$('.example-note').textContent=visible.some(p=>p.demo)?'含示例内容 · 探索原型':'LeoLei · 作品与日常';
  let current=-1,syncing=false;
  const emit=(type,detail)=>window.dispatchEvent(new CustomEvent(type,{detail}));

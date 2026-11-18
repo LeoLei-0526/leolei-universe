@@ -50,7 +50,9 @@
       vOpacity=opacity*uEmphasis*smoothstep(.25,1.4,-mv.z);
       gl_Position=projectionMatrix*mv;
       float depth=max(.6,-mv.z);
-      #ifdef DUST
+      #ifdef HEART
+        gl_PointSize=clamp(82.*pow(23./depth,.23),64.,118.)*uPixel;
+      #elif defined(DUST)
         vCore=clamp(size*pow(23./depth,.28),.19,.62);
         gl_PointSize=max(2.,vCore*6.)*uPixel;
         float variance=vCore*vCore+.07/(uPixel*uPixel);
@@ -71,6 +73,16 @@
       gl_FragColor=vec4(mix(c,vec3(1.,.97,.94),.16),core*vOpacity*uBrightness);}`;
   const glowFrag=`precision highp float;uniform float uBrightness;varying vec3 vTint;varying float vOpacity;
     void main(){float d=length(gl_PointCoord-.5)*2.;if(d>1.)discard;
+      #ifdef HEART
+      {
+        vec2 p=abs(gl_PointCoord-.5)*2.;
+        float nucleus=exp(-d*d*700.);
+        float bloom=exp(-d*d*52.);
+        float rays=(exp(-p.x*140.)*exp(-p.y*9.)+exp(-p.y*140.)*exp(-p.x*9.));
+        vec3 light=vec3(1.,.98,.90)*(nucleus*8.+rays*.9)+vTint*(bloom*.72+exp(-d*d*7.)*.065);
+        gl_FragColor=vec4(light,vOpacity*uBrightness*(1.-smoothstep(.7,1.,d)));return;
+      }
+      #endif
       float core=exp(-d*d*480.);
       float shoulder=exp(-d*d*65.);
       float halo=exp(-d*d*7.)*(1.-smoothstep(.65,1.,d));
@@ -235,7 +247,8 @@
   ]).map(star=>({...star,position:Array.isArray(star.position)?new T.Vector3(...star.position):star.position}));
   const projectLights=makePoints(stars.flatMap(s=>s.position.toArray()),stars.flatMap(s=>s.color),stars.map(()=>23),stars.map(()=>.9),stars.map((_,i)=>i),glowFrag);
   const heartPosition=new T.Vector3(.4,.3,-.1);
-  makePoints(heartPosition.toArray(),[1,.76,.43],[54],[1.1],[0],glowFrag);
+  const heartLight=makePoints(heartPosition.toArray(),[1,.79,.47],[82],[1.65],[0],glowFrag);
+  heartLight.name='about-me-primary-star';heartLight.material.defines.HEART=1;
   let heartOpen=false,beforeHeart=null;
   let hovered=-1,selected=-1,spin=0,paused=reduced,elapsed=0,last=performance.now(),frames=0,flight=null,visible=true;
   const rotationSpeed=Math.PI*2/(sceneSettings.rotationMinutes*60);

@@ -13,6 +13,10 @@
 .personal #about-universe .eyebrow{letter-spacing:4px;font-size:9px}
 .personal #about-universe p,.personal #about-universe .about-lead{font:400 15px/2.15 'Microsoft YaHei','PingFang SC',sans-serif;letter-spacing:.5px;color:#cfc3cf;margin:0 0 24px;white-space:pre-line}
 .personal #about-copy p:last-child{color:#e8cfb3;margin-top:32px}
+.personal #about-copy .about-contact{font-size:13px;letter-spacing:0;color:#bdafbf;margin-top:24px;overflow-wrap:anywhere}
+.personal .about-contact a{color:#eed4ae;text-decoration:underline;text-underline-offset:4px}
+.personal .about-contact a:hover{color:#fff3df}
+.personal .about-contact a:focus-visible{outline:1px solid #eed4ae;outline-offset:5px}
 .personal #about-explore{margin-top:10px;border:0;border-top:1px solid #d5b58e26;border-radius:0;width:100%;text-align:left;padding:24px 0 0;background:none;backdrop-filter:none;font-size:12px;letter-spacing:1px}
 .personal #star-card{width:min(660px,52vw);background:linear-gradient(150deg,#18131df7,#0e0b13fc);box-shadow:-30px 0 110px #0005}
 .personal .card-top{padding:22px 40px}
