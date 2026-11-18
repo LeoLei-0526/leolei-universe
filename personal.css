@@ -27,6 +27,7 @@
 .personal .personal-story .takeaway{border:0;background:none;border-radius:0;padding:0;margin:0}
 .personal .personal-story .cover{padding:0;min-height:0;background:#f4f0e8;border-radius:8px;border:0;aspect-ratio:1440/960}
 .personal .personal-story .cover img{display:block;width:100%;height:100%;object-fit:contain}
+.personal .personal-story .cover.portrait-cover{aspect-ratio:9/16!important;width:min(100%,202.5px);height:360px;margin-inline:auto;background:#0d0b12}
 .personal .personal-story .cover-caption{font-size:10px;letter-spacing:1px;color:#9f8d9e;margin:12px 0 30px}
 .personal .personal-story .project-link{display:inline-flex;gap:20px;align-items:center;border:1px solid #e0c39d45;border-radius:30px;padding:13px 22px;color:#ebd1b3;font-size:13px;letter-spacing:1px;margin:8px 0}
 .personal .personal-story .project-link:hover{background:#d8b78d18}
